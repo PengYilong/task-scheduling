@@ -1,0 +1,12 @@
+{
+	"name": "laravel-admin-extentions/task-scheduling",
+	"description": "Task scheduling for Laravel admin",
+	"require": {
+        "php": ">=7.0"
+    },
+	"autoload": {
+        "psr-4": {
+			"Encore\\Admin\\TaskScheduling\\": "src/"
+        }
+    }	
+}
