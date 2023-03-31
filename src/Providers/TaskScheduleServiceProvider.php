@@ -40,5 +40,9 @@ class TaskScheduleServiceProvider extends ServiceProvider
             //路由
             TaskScheduling::routes(__DIR__.'/../routes/web.php');
         });
+
+        $this->publishes([
+            __DIR__.'/../../config' => config_path(),
+        ], 'task-scheduling');
     }
 }

@@ -11,8 +11,8 @@ Encore\Admin\TaskScheduling\Providers\TaskScheduleServiceProvider::class
 
 Run the migration
 ```
-php artisan migrate ./vendor/laravel-admin-ext/task-scheduling/database/migrations
+php artisan migrate ./vendor/abyssgoing/task-scheduling/database/migrations
 ```
 
-# License
-This software is released under the MIT License.
+## License
+This software is released under the [MIT](LICENSE) License.

@@ -6,6 +6,9 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\TaskScheduling\Http\Models\Task;
 use Encore\Admin\Controllers\HasResourceActions;
+use Encore\Admin\TaskScheduling\Actions\Tasks\ExecuteManually;
+Use Encore\Admin\Widgets\Table;
+use Illuminate\Support\Facades\Artisan;
 
 class TaskSchedulingController
 {
@@ -93,18 +96,26 @@ class TaskSchedulingController
     }
 
 	public function grid()
-	{
+	{ 
 		$grid = new Grid(new Task);
         $grid->id('Id')->sortable();
-        $grid->column('description', '描述')->sortable();
+        $grid->column('description', '描述')->sortable()->modal('执行日志', function ($model) {
+
+            $logs = $model->commandLogs()->take(10)->orderBy('created_at', 'desc')->get()->map(function ($log) {
+                return $log->only(['id', 'duration', 'created_at']);
+            });
+        
+            return new Table(['ID', '花费时间', '执行时间'], $logs->toArray());
+        });
         $grid->column('command', '命令');
-        $grid->column('template', '模板');
         $states = [
             'on' => ['value' => 1, 'text' => '打开', 'color' => 'primary'],
             'off' => ['value' => 0, 'text' => '关闭', 'color' => 'default'],
         ];
 
         $grid->column('enabled', '开关')->switch($states);
+
+        $grid->column('execute', '执行')->action(ExecuteManually::class);
 
 		return $grid;
 	}
@@ -118,8 +129,14 @@ class TaskSchedulingController
     {
         $form = new Form(new Task());
 
-        $form->text('description', '描述');
-        $form->text('command', '命令');
+        $form->text('description', '描述')->required();
+
+        $commands = Artisan::all();
+        foreach($commands as $key => $command) {
+            $options[$key] = $key;
+        }
+ 
+        $form->select('command', '命令')->options($options)->required();
 
         $states = [
             'on' => ['value' => 1, 'text' => '打开', 'color' => 'primary'],
@@ -127,9 +144,9 @@ class TaskSchedulingController
         ];
 
         $form->hasMany('frequencies', function (Form\NestedForm $form) {
-            $form->text('function');
+            $form->select('function')->options(config('task-scheduling.frequencies'));
             $form->text('parameters');
-        });
+        })->required();
 
         $form->hasMany('templates', function (Form\NestedForm $form) {
             $form->textarea('content');

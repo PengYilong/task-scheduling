@@ -7,6 +7,7 @@ use Encore\Admin\TaskScheduling\TaskScheduling;
 use Illuminate\Console\Scheduling\Schedule;
 use Encore\Admin\TaskScheduling\Http\Models\Task;
 use Encore\Admin\TaskScheduling\Services\TaskService;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleServiceProvider extends ServiceProvider
 {
@@ -17,7 +18,6 @@ class ConsoleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
 
     }
 
@@ -47,11 +47,9 @@ class ConsoleServiceProvider extends ServiceProvider
                     // The task is about to execute...
                 })
                 ->after(function () use( $task, $event ){
-
                     $task->commandLogs()->create([
                         'duration' => microtime(true)-$event->start,
                     ]);
-               
                 });
 		}
 

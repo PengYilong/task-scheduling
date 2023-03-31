@@ -3,6 +3,7 @@
 namespace Encore\Admin\TaskScheduling\Services;
 
 use Encore\Admin\TaskScheduling\Http\Models\Task;
+use Illuminate\Support\Facades\Artisan;
 
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 
@@ -30,5 +31,22 @@ class TaskService
 		$this->expression = null;
 
 		return $expression;
+	}
+
+	public function execute($task)
+	{
+        $start = microtime(true);
+        try {
+            Artisan::call($task->command);
+            $output = Artisan::output();
+			$task->commandLogs()->create([
+				'duration' => microtime(true)-$start,
+				'result' => $output,
+			]);
+        } catch (\Exception $e) {
+            $output = $e->getMessage();
+        }
+
+        return $task;
 	}
 }
