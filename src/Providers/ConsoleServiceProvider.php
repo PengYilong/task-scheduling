@@ -8,6 +8,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Encore\Admin\TaskScheduling\Http\Models\Task;
 use Encore\Admin\TaskScheduling\Services\TaskService;
 use Symfony\Component\Console\Output\OutputInterface;
+use Illuminate\Support\Facades\Schema;
 
 class ConsoleServiceProvider extends ServiceProvider
 {
@@ -35,23 +36,30 @@ class ConsoleServiceProvider extends ServiceProvider
 
 	public function schedule(Schedule $schedule)
 	{
-		$service = new TaskService;
-		$tasks = Task::where('enabled', 1)->get(); 
-		
-		foreach($tasks as $task) {
-			$event = $schedule->command($task->command);
-			$event->cron($service->getCronExpression($task))
-                ->name($task->description)
-                ->before(function () use ($event){
-                    $event->start = microtime(true);
-                    // The task is about to execute...
-                })
-                ->after(function () use( $task, $event ){
-                    $task->commandLogs()->create([
-                        'duration' => microtime(true)-$event->start,
-                    ]);
-                });
-		}
+        if (Schema::hasTable(config('task-scheduling.table_prefix').'tasks')) {
+            // the table exists, you can continue with your logic here
+            $service = new TaskService;
+            $tasks = Task::where('enabled', 1)->get(); 
+            
+            foreach($tasks as $task) {
+                $event = $schedule->command($task->command);
+                $event->cron($service->getCronExpression($task))
+                    ->name($task->description)
+                    ->before(function () use ($event){
+                        $event->start = microtime(true);
+                        // The task is about to execute...
+                    })
+                    ->after(function () use( $task, $event ){
+                        $task->commandLogs()->create([
+                            'duration' => microtime(true)-$event->start,
+                        ]);
+                    });
+            }
+
+        } else {
+            // the table does not exist, handle the error or exception here
+        }
+
 
 	}
 }

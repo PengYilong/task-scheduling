@@ -1,7 +1,7 @@
 # Installing
 Use composer to install this extension to your Laravel admin project:
 ```
-composer require laravel-admin-extensions/task-scheduling
+composer require abyssgoing/task-scheduling
 ```
 
 Add `TaskScheduleServiceProvider` to the providers array of your Laravel applications's config/app.php
@@ -11,7 +11,12 @@ Encore\Admin\TaskScheduling\Providers\TaskScheduleServiceProvider::class
 
 Run the migration
 ```
-php artisan migrate ./vendor/abyssgoing/task-scheduling/database/migrations
+php artisan migrate:migrate --path=vendor/abyssgoing/task-scheduling/database/migrations
+```
+
+Refresh the migration
+```
+php artisan migrate:refresh --path=vendor/abyssgoing/task-scheduling/database/migrations
 ```
 
 ## License

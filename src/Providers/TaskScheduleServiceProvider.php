@@ -24,7 +24,7 @@ class TaskScheduleServiceProvider extends ServiceProvider
         $this->commands([
             ListSchedule::class,
         ]);
-
+ 
         $this->app->register(ConsoleServiceProvider::class);
     }
 
@@ -39,6 +39,7 @@ class TaskScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             //路由
             TaskScheduling::routes(__DIR__.'/../routes/web.php');
+            
         });
 
         $this->publishes([
