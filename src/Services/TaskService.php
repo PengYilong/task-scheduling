@@ -4,8 +4,8 @@ namespace Encore\Admin\TaskScheduling\Services;
 
 use Encore\Admin\TaskScheduling\Http\Models\Task;
 use Illuminate\Support\Facades\Artisan;
-
 use Illuminate\Console\Scheduling\ManagesFrequencies;
+use Closure;
 
 class TaskService
 {
@@ -32,6 +32,19 @@ class TaskService
 
 		return $expression;
 	}
+
+    /**
+     * Register a callback to further filter the schedule.
+     *
+     * @param  Closure  $callback
+     * @return $this
+     */
+    public function when(Closure $callback)
+    {
+        $this->filters[] = $callback;
+
+        return $this;
+    }
 
 	public function execute($task)
 	{
