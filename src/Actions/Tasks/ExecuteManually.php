@@ -21,7 +21,7 @@ class ExecuteManually extends RowAction
     // This method displays different icons in this column based on the value of the `star` field.
     public function display($target)
     {
-        return '手动执行';
+        return '<i class="fa fa-check"></i>';
     }
 
     public function dialog()
