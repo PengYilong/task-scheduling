@@ -4,6 +4,11 @@ Use composer to install this extension to your Laravel admin project:
 composer require abyssgoing/task-scheduling
 ```
 
+## Publish Resources
+```
+php artisan vendor:publish --provider="Encore\Admin\TaskScheduling\Providers\TaskScheduleServiceProvider"
+```
+
 Run the migration
 ```
 php artisan migrate:migrate --path=vendor/abyssgoing/task-scheduling/database/migrations
