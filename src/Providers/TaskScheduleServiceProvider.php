@@ -15,12 +15,6 @@ class TaskScheduleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // 
-        $this->mergeConfigFrom(
-            __DIR__.'/../../config/task-scheduling.php', 
-            'task-scheduling'
-        );
-
         $this->commands([
             ListSchedule::class,
         ]);
@@ -39,7 +33,6 @@ class TaskScheduleServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             //路由
             TaskScheduling::routes(__DIR__.'/../routes/web.php');
-            
         });
 
         $this->publishes([

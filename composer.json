@@ -19,5 +19,12 @@
         "psr-4": {
 			"Encore\\Admin\\TaskScheduling\\": "src/"
         }
-    }	
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Encore\\Admin\\TaskScheduling\\Providers\\TaskScheduleServiceProvider"
+            ]
+        }
+    }
 }
