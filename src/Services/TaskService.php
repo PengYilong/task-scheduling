@@ -22,8 +22,13 @@ class TaskService
 		$this->expression = '* * * * *';
 
 		foreach($task->frequencies as $frequency) {
-			$parameters = !empty($frequency->parameters) ? explode(',', $frequency->parameters) : []; 
-			call_user_func_array([$this, $frequency->function], explode(',', $frequency->parameters));
+            if( 'cron' != $frequency->function ) {
+                $parameters = !empty($frequency->parameters) ? explode(',', $frequency->parameters) : []; 
+                call_user_func_array([$this, $frequency->function], explode(',', $frequency->parameters));
+            } else {
+                call_user_func_array([$this, $frequency->function], [$frequency->parameters]); 
+            }
+			
 		}
 
 		$expression = $this->expression;
